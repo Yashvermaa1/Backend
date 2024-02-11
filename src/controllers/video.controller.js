@@ -200,6 +200,46 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+    if (!videoId) {
+        throw new ApiError(400, "videoId is required")
+    }
+    if (!mongoose.Types.ObjectId.isValid({_id: videoId})) {
+        throw new ApiError(400, "Invalid videoId")
+    }
+    const togglePublishAggregatePipeline = [
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        {
+            $set:{
+                PublishedId:{
+                    $cond:{
+                        if:{$eq:["$isPublished", true]},
+                        then:false,
+                        else:true,
+                    }
+                }
+            }
+        },
+        {
+            $projects:{
+                _id:1,
+                owner:1,
+                PublishedId:1,
+                title:1,
+            }
+        }
+    ]
+    const  updatedVideo = await Video.aggregate(togglePublishAggregatePipeline)
+    if (!updatedVideo) {
+        throw new ApiError(400, "Video not found");
+    }
+    
+    return res
+    .status(200)
+    .json(new ApiResponse(200, updatedVideo, "Video updated successfully"));
 })
 
 
