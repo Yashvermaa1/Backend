@@ -7,7 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
+  const uploadOnCloudinary = async (localFilePath) => {
     try {
         if(!localFilePath) return null
         const response = await cloudinary.uploader.upload(localFilePath, {
@@ -20,5 +20,41 @@ const uploadOnCloudinary = async (localFilePath) => {
         fs.unlinkSync(localFilePath)
         return null
     }
-}
-export {uploadOnCloudinary}
+  }
+  const deleteVideoonCloudinary = async (publicId) => {
+    try {
+      if (!publicId) {
+        return null;
+      }
+      let response = await cloudinary.v2.uploader.destroy(publicId, {
+        resource_type: "video",
+      });
+      return response;
+    } catch (error) {
+      return null;
+    }
+  };
+  const deleteImageonCloudinary = async (publicId) => {
+    try {
+      if (!publicId) {
+        return null;
+      }
+      let response = await cloudinary.v2.uploader.destroy(publicId, {
+        resource_type: "image",
+      });
+      return response;
+    } catch (error) {
+      return null;
+    }
+  };
+  const deleteAssetOnCloudinary = async (publicId) => {
+  try {
+    const result = await cloudinary.v2.uploader.destroy(publicId);
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to delete asset on Cloudinary');
+  }
+  };
+export { uploadOnCloudinary, deleteImageonCloudinary, deleteVideoonCloudinary,deleteAssetOnCloudinary };
