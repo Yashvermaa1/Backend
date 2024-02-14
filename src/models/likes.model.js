@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
-import { User } from "./user.model";
-import { Video } from "./video.model";
+import { User } from "./user.model.js";
+import { Video } from "./video.model.js";
 const likesSchema = new Schema(
     {
         likedBy:{
@@ -13,4 +13,4 @@ const likesSchema = new Schema(
         }
     },{timestamps:true})
 
-export const Likes = mongoose.model("Likes", likesSchema)
+export const Like = mongoose.model("Likes", likesSchema)

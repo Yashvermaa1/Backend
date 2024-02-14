@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
-import { Video } from "./video.model";
-import { User } from "./user.model";
+import { Video } from "./video.model.js";
+import { User } from "./user.model.js";
 const playlistSchema = new Schema(
     {
         name:{

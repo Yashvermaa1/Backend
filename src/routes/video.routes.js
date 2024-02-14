@@ -18,8 +18,11 @@ router.route("/").get(gettAllVideos).post(
     ]),
     publishAVideo
 )
-router.route("/search").get(getVideoById)
-router.route("/update-video").patch(verifyJWT, upload.single("thumbnail") , updateVideo)
-router.route("/delete-video").patch(verifyJWT, deleteVideo)
+router
+    .route("/:videoId")
+    .get(getVideoById)
+    .delete(deleteVideo)
+    .patch(upload.single("thumbnail"), updateVideo);
+    
 router.route("/toggle/publish/:videoId").patch( togglePublishStatus);
 export default router
